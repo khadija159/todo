@@ -31,6 +31,18 @@ class AppTheme {
           ),
       ),
     ),
+    textTheme: TextTheme(
+      titleMedium: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: black,
+      ),
+      titleSmall: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        color: black,
+      ),
+    ),
   );
 
   static ThemeData darkTheme = ThemeData();
