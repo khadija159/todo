@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen>{
             ]),
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: (){},
+          onPressed: () => showModalBottomSheet(context: context, builder: (_) => ),
           child: Icon(
               Icons.add,
               size: 32,
