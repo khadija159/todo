@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todo/default_text_form_field.dart';
 import 'package:todo/default_elevated_button.dart';
+import 'package:todo/models/task_model.dart';
 
 class AddTaskBottomSheet extends StatefulWidget{
   @override
@@ -92,6 +93,9 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet>{
     );
   }
   void addTask(){
-    print('function called');
+    TaskModel task = TaskModel(
+        title: titleController.text,
+        description: descriptionController.text,
+        date: selectedDate)
   }
 }

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:todo/app_theme.dart';
+import 'package:todo/models/task_model.dart';
 
 class TaskItem extends StatelessWidget {
+  TaskItem(this.task);
+
+  TaskModel task;
+
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
@@ -25,12 +30,12 @@ class TaskItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                  'Play Basketball',
+                  task.title,
                   style: textTheme.titleMedium?.copyWith(color: AppTheme.primary),
               ),
               SizedBox(height: 4,),
               Text(
-                  'Task Description',
+                  task.description,
                 style: textTheme.bodySmall,
               )
             ],

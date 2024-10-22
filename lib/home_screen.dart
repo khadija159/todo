@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:todo/tabs/tasks/add_task_bottom_sheet.dart';
 import 'app_theme.dart';
 import 'tabs/tasks/tasks_tab.dart';
 import 'tabs/settings/settings_tab.dart';
@@ -49,7 +50,9 @@ class _HomeScreenState extends State<HomeScreen>{
             ]),
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () => showModalBottomSheet(context: context, builder: (_) => ),
+          onPressed: () => showModalBottomSheet(
+            context: context,
+            builder: (_) => AddTaskBottomSheet(), ),
           child: Icon(
               Icons.add,
               size: 32,
