@@ -96,6 +96,6 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet>{
     TaskModel task = TaskModel(
         title: titleController.text,
         description: descriptionController.text,
-        date: selectedDate)
+        date: selectedDate);
   }
 }
