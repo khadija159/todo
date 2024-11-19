@@ -13,7 +13,8 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     primaryColor: primary,
     scaffoldBackgroundColor: backgroundLight,
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    appBarTheme: const AppBarTheme(backgroundColor: Colors.transparent, centerTitle: true),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       type: BottomNavigationBarType.fixed,
       backgroundColor: white,
       selectedItemColor: primary,
@@ -21,7 +22,7 @@ class AppTheme {
       showSelectedLabels: false,
       showUnselectedLabels: false,
     ),
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: primary,
       foregroundColor: white,
       shape: CircleBorder(
@@ -31,7 +32,7 @@ class AppTheme {
           ),
       ),
     ),
-    textTheme: TextTheme(
+    textTheme: const TextTheme(
       titleMedium: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,
@@ -47,6 +48,9 @@ class AppTheme {
       style: ElevatedButton.styleFrom(
         backgroundColor: primary,
       ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(foregroundColor: primary),
     ),
   );
 

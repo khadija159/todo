@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/tabs/tasks/add_task_bottom_sheet.dart';
 import 'app_theme.dart';
@@ -8,14 +7,16 @@ import 'tabs/settings/settings_tab.dart';
 class HomeScreen extends StatefulWidget{
   static const String routeName = '/home';
 
+  const HomeScreen({super.key});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen>{
   List<Widget> tabs = [
-    TasksTab(),
-    SettingsTab(),
+    const TasksTab(),
+    const SettingsTab(),
   ];
   int currentTabIndex = 0;
 
@@ -25,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen>{
       backgroundColor: AppTheme.backgroundLight,
       body: tabs[currentTabIndex],
       bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
+        shape: const CircularNotchedRectangle(),
         notchMargin: 10,
         clipBehavior: Clip.antiAliasWithSaveLayer,
         padding: EdgeInsets.zero,
@@ -34,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen>{
             currentIndex: currentTabIndex,
             onTap: (index) => setState(() => currentTabIndex = index),
             elevation: 0,
-            items: [
+            items: const [
               BottomNavigationBarItem(
                   label: 'Tasks',
                   icon: Icon(
@@ -52,8 +53,8 @@ class _HomeScreenState extends State<HomeScreen>{
       floatingActionButton: FloatingActionButton(
           onPressed: () => showModalBottomSheet(
             context: context,
-            builder: (_) => AddTaskBottomSheet(), ),
-          child: Icon(
+            builder: (_) => const AddTaskBottomSheet(), ),
+          child: const Icon(
               Icons.add,
               size: 32,
           ),

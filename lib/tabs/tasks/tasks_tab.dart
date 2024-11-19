@@ -2,12 +2,14 @@ import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/app_theme.dart';
-import 'package:todo/firebase_functions.dart';
-import 'package:todo/models/task_model.dart';
+import 'package:todo/tabs/auth/user_provider.dart';
 import 'package:todo/tabs/tasks/tasks_provider.dart';
 import 'task_item.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TasksTab extends StatefulWidget{
+  const TasksTab({super.key});
+
   @override
   State<TasksTab> createState() => _TasksTabState();
 }
@@ -19,8 +21,9 @@ class _TasksTabState extends State<TasksTab> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.sizeOf(context).height;
     TasksProvider tasksProvider = Provider.of<TasksProvider>(context);
+    String userId = Provider.of<UserProvider>(context, listen: false).currentUser!.id;
     if(shouldGetTask){
-      tasksProvider.getTasks();
+      tasksProvider.getTasks(userId);
       shouldGetTask = false;
     }
 
@@ -37,7 +40,7 @@ class _TasksTabState extends State<TasksTab> {
               start: 20,
               child: SafeArea(
                 child: Text(
-                    'ToDo List',
+                    AppLocalizations.of(context)!.todoList,
                   style: Theme.of(context)
                   .textTheme
                   .titleMedium
@@ -48,15 +51,12 @@ class _TasksTabState extends State<TasksTab> {
             Padding(
               padding: EdgeInsets.only(top: screenHeight * 0.1),
               child: EasyInfiniteDateTimeLine(
-                firstDate: DateTime.now().subtract(Duration(days: 365)),
+                firstDate: DateTime.now().subtract(const Duration(days: 365)),
                 focusDate: tasksProvider.selectedDate,
-                lastDate: DateTime.now().add(Duration(days: 365),),
-                onDateChange: (selectedDate){
-                  tasksProvider.changeSelectedDate(selectedDate);
-                  tasksProvider.getTasks();
-                },
+                lastDate: DateTime.now().add(const Duration(days: 365),),
+                onDateChange: (selectedDate) => tasksProvider.getSelectedDateTasks(selectedDate, userId),
                 showTimelineHeader: false,
-                dayProps: EasyDayProps(
+                dayProps: const EasyDayProps(
                   height: 79,
                   width: 58,
                   dayStructure: DayStructure.dayStrDayNum,
@@ -115,7 +115,7 @@ class _TasksTabState extends State<TasksTab> {
         ),
         Expanded(
             child: ListView.builder(
-              padding: EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.only(top: 20),
               itemBuilder: (_, index) => TaskItem(tasksProvider.tasks[index]),
               itemCount: tasksProvider.tasks.length,)
         ),

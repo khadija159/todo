@@ -3,7 +3,7 @@ import 'package:todo/app_theme.dart';
 
 class DefaultElevatedButton extends StatelessWidget{
 
-  DefaultElevatedButton({
+  DefaultElevatedButton({super.key, 
     required this.label,
     required this.onPressed,
 });

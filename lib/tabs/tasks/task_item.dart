@@ -7,8 +7,10 @@ import 'package:todo/firebase_functions.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/tabs/tasks/tasks_provider.dart';
 
+import '../auth/user_provider.dart';
+
 class TaskItem extends StatelessWidget {
-  TaskItem(this.task);
+  TaskItem(this.task, {super.key});
 
   TaskModel task;
 
@@ -19,18 +21,18 @@ class TaskItem extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
       child: Slidable(
         startActionPane: ActionPane(
-            motion: ScrollMotion(),
+            motion: const ScrollMotion(),
             children: [
               SlidableAction(
                 onPressed: (_){
-                  FirebaseFunctions.deleteTaskFromFirestore(task.id).timeout(
-                    Duration(microseconds: 100),
-                    onTimeout:() {
-                      Provider.of<TasksProvider>(context, listen: false).getTasks();
+                  String userId = Provider.of<UserProvider>(context, listen: false).currentUser!.id;
+                  FirebaseFunctions.deleteTaskFromFirestore(task.id, userId).then(
+                    (_) {
+                      Provider.of<TasksProvider>(context, listen: false).getTasks(userId);
                       },
                   ).catchError(
                       (_) {
@@ -51,8 +53,8 @@ class TaskItem extends StatelessWidget {
             ],
         ),
         child: Container(
-          margin: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-          padding: EdgeInsets.all(20),
+          margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: AppTheme.white,
             borderRadius: BorderRadius.circular(15),
@@ -62,7 +64,7 @@ class TaskItem extends StatelessWidget {
               Container(
                 height: 62,
                 width: 4,
-                margin: EdgeInsetsDirectional.only(end: 12),
+                margin: const EdgeInsetsDirectional.only(end: 12),
                 color: AppTheme.primary,
               ),
               Column(
@@ -72,14 +74,14 @@ class TaskItem extends StatelessWidget {
                       task.title,
                       style: textTheme.titleMedium?.copyWith(color: AppTheme.primary),
                   ),
-                  SizedBox(height: 4,),
+                  const SizedBox(height: 4,),
                   Text(
                       task.description,
                     style: textTheme.bodySmall,
                   )
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               Container(
                 height: 34,
                 width: 69,
@@ -87,7 +89,7 @@ class TaskItem extends StatelessWidget {
                   color: AppTheme.primary,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.check,
                   color: AppTheme.white,
                   size: 32,

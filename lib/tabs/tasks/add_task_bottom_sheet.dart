@@ -9,7 +9,11 @@ import 'package:todo/models/task_model.dart';
 import 'package:todo/tabs/tasks/tasks_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../auth/user_provider.dart';
+
 class AddTaskBottomSheet extends StatefulWidget{
+  const AddTaskBottomSheet({super.key});
+
   @override
   State<StatefulWidget> createState() => _AddTaskBottomSheetState();
 }
@@ -31,7 +35,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet>{
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: AppTheme.white,
           borderRadius: BorderRadius.horizontal(
             left: Radius.circular(15),
@@ -41,7 +45,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet>{
         height: MediaQuery
             .sizeOf(context)
             .height * 0.5,
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Form(
           key: formKey,
           child: Column(
@@ -50,7 +54,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet>{
                 'Add new task',
                 style: titleMediumStyle,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               DefaultTextFormField(
                 controller: titleController,
                 hintText: 'Enter task title',
@@ -61,7 +65,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet>{
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               DefaultTextFormField(
                 controller: descriptionController,
                 hintText: 'Enter task description',
@@ -72,18 +76,18 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet>{
                   return null;
                 },
               ),
-              SizedBox(height: 16,),
+              const SizedBox(height: 16,),
               Text(
                 'Select date',
                 style: titleMediumStyle?.copyWith(fontWeight: FontWeight.w400),
               ),
-              SizedBox(height: 8,),
+              const SizedBox(height: 8,),
               InkWell(
                 onTap: () async {
                   DateTime? dateTime = await showDatePicker(
                     context: context,
                     firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(Duration(days: 365)),
+                    lastDate: DateTime.now().add(const Duration(days: 365)),
                     initialEntryMode: DatePickerEntryMode.calendarOnly,
                   );
                   if (dateTime != null && dateTime != selectedDate) {
@@ -93,7 +97,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet>{
                 },
                 child: Text(dateFormat.format(selectedDate)),
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               DefaultElevatedButton(
                   label: 'Add',
                   onPressed: () {
@@ -112,11 +116,11 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet>{
         title: titleController.text,
         description: descriptionController.text,
         date: selectedDate);
-    FirebaseFunctions.addTaskToFirestore(task).timeout(
-      Duration(microseconds: 100),
-      onTimeout: (){
+    String userId = Provider.of<UserProvider>(context, listen: false).currentUser!.id;
+    FirebaseFunctions.addTaskToFirestore(task, userId).then(
+      (_){
         Navigator.of(context).pop();
-        Provider.of<TasksProvider>(context, listen: false).getTasks();
+        Provider.of<TasksProvider>(context, listen: false).getTasks(userId);
         Fluttertoast.showToast(
           msg: 'Task Added Successfully',
           toastLength: Toast.LENGTH_LONG,
