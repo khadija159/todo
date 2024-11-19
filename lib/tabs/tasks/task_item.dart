@@ -9,11 +9,16 @@ import 'package:todo/tabs/tasks/tasks_provider.dart';
 
 import '../auth/user_provider.dart';
 
-class TaskItem extends StatelessWidget {
+class TaskItem extends StatefulWidget {
   TaskItem(this.task, {super.key});
 
   TaskModel task;
 
+  @override
+  State<TaskItem> createState() => _TaskItemState();
+}
+
+class _TaskItemState extends State<TaskItem> {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
@@ -30,7 +35,7 @@ class TaskItem extends StatelessWidget {
               SlidableAction(
                 onPressed: (_){
                   String userId = Provider.of<UserProvider>(context, listen: false).currentUser!.id;
-                  FirebaseFunctions.deleteTaskFromFirestore(task.id, userId).then(
+                  FirebaseFunctions.deleteTaskFromFirestore(widget.task.id, userId).then(
                     (_) {
                       Provider.of<TasksProvider>(context, listen: false).getTasks(userId);
                       },
@@ -65,34 +70,40 @@ class TaskItem extends StatelessWidget {
                 height: 62,
                 width: 4,
                 margin: const EdgeInsetsDirectional.only(end: 12),
-                color: AppTheme.primary,
+                color: widget.task.isDone ? AppTheme.green:AppTheme.primary,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                      task.title,
-                      style: textTheme.titleMedium?.copyWith(color: AppTheme.primary),
+                      widget.task.title,
+                      style: widget.task.isDone ? textTheme.titleMedium?.copyWith(color: AppTheme.green):textTheme.titleMedium?.copyWith(color: AppTheme.primary),
                   ),
                   const SizedBox(height: 4,),
                   Text(
-                      task.description,
-                    style: textTheme.bodySmall,
+                      widget.task.description,
+                    style: widget.task.isDone ? textTheme.bodySmall?.copyWith(color: AppTheme.green):textTheme.bodySmall,
                   )
                 ],
               ),
               const Spacer(),
-              Container(
-                height: 34,
-                width: 69,
-                decoration: BoxDecoration(
-                  color: AppTheme.primary,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(
-                  Icons.check,
-                  color: AppTheme.white,
-                  size: 32,
+              InkWell(
+                onTap: (){
+                  isDone();
+                },
+                child: Container(
+                  height: 34,
+                  width: 69,
+                  decoration: BoxDecoration(
+                    color: widget.task.isDone ? Colors.transparent:AppTheme.primary,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: widget.task.isDone ?
+                         Center(child: Text('Done!', style: TextStyle(color: AppTheme.green, fontWeight: FontWeight.w600),)):const Icon(
+                    Icons.check,
+                    color: AppTheme.white,
+                    size: 32,
+                  )
                 ),
               ),
             ],
@@ -102,4 +113,14 @@ class TaskItem extends StatelessWidget {
     );
   }
 
+  void isDone(){
+    if(widget.task.isDone == false){
+      widget.task.isDone = true;
+    }
+    else{
+      widget.task.isDone = false;
+    }
+    setState(() {});
+
+  }
 }
