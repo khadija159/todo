@@ -31,7 +31,7 @@ class SettingsTab extends StatelessWidget{
                               .resetData();
                           Provider.of<UserProvider>(context, listen: false).updateUser(null);
                         },
-                        icon: Icon(
+                        icon: const Icon(
                             Icons.logout,
                             size: 28,
                         )

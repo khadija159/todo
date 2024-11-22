@@ -6,6 +6,7 @@ import 'package:todo/app_theme.dart';
 import 'package:todo/firebase_functions.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/tabs/tasks/tasks_provider.dart';
+import 'package:todo/tabs/tasks/update_task.dart';
 
 import '../auth/user_provider.dart';
 
@@ -21,11 +22,12 @@ class TaskItem extends StatefulWidget {
 class _TaskItemState extends State<TaskItem> {
   @override
   Widget build(BuildContext context) {
+    String userId = Provider.of<UserProvider>(context, listen: false).currentUser!.id;
     TextTheme textTheme = Theme.of(context).textTheme;
 
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-      decoration: BoxDecoration(
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+      decoration:const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
       child: Slidable(
@@ -34,7 +36,7 @@ class _TaskItemState extends State<TaskItem> {
             children: [
               SlidableAction(
                 onPressed: (_){
-                  String userId = Provider.of<UserProvider>(context, listen: false).currentUser!.id;
+                  //String userId = Provider.of<UserProvider>(context, listen: false).currentUser!.id;
                   FirebaseFunctions.deleteTaskFromFirestore(widget.task.id, userId).then(
                     (_) {
                       Provider.of<TasksProvider>(context, listen: false).getTasks(userId);
@@ -54,6 +56,16 @@ class _TaskItemState extends State<TaskItem> {
                 foregroundColor: AppTheme.white,
                 icon: Icons.delete,
                 label: 'Delete',
+              ),
+              SlidableAction(
+                onPressed: (_){
+                  Provider.of<TasksProvider>(context, listen: false).setSelectedTask(widget.task);
+                  Navigator.of(context).pushNamed(updateTask.routeName);
+                },
+                backgroundColor: Colors.blueGrey,
+                foregroundColor: AppTheme.white,
+                icon: Icons.edit,
+                label: 'Edit',
               ),
             ],
         ),
@@ -89,7 +101,9 @@ class _TaskItemState extends State<TaskItem> {
               const Spacer(),
               InkWell(
                 onTap: (){
-                  isDone();
+                  FirebaseFunctions.editisDone(widget.task,userId);
+                  Provider.of<TasksProvider>(context, listen: false).getTasks(userId);
+                  //setState(() {});
                 },
                 child: Container(
                   height: 34,
@@ -99,7 +113,7 @@ class _TaskItemState extends State<TaskItem> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: widget.task.isDone ?
-                         Center(child: Text('Done!', style: TextStyle(color: AppTheme.green, fontWeight: FontWeight.w600),)):const Icon(
+                         const Center(child: Text('Done!', style: TextStyle(color: AppTheme.green, fontWeight: FontWeight.w600),)):const Icon(
                     Icons.check,
                     color: AppTheme.white,
                     size: 32,
@@ -111,16 +125,5 @@ class _TaskItemState extends State<TaskItem> {
         ),
       ),
     );
-  }
-
-  void isDone(){
-    if(widget.task.isDone == false){
-      widget.task.isDone = true;
-    }
-    else{
-      widget.task.isDone = false;
-    }
-    setState(() {});
-
   }
 }

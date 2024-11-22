@@ -28,6 +28,11 @@ class FirebaseFunctions{
     return doc.set(task);
   }
 
+  static Future<void> updateTaskInFirestore(TaskModel task, String userId) async {
+    CollectionReference<TaskModel> taskCollection = getTaskCollection(userId);
+    return taskCollection.doc(task.id).update(task.toJson());
+  }
+
   static Future<List<TaskModel>> getAllTasksFromFirestore(String userId) async {
     CollectionReference<TaskModel> taskCollection = getTaskCollection(userId);
     QuerySnapshot<TaskModel> querySnapshot = await taskCollection.get();
@@ -37,6 +42,11 @@ class FirebaseFunctions{
   static Future<void> deleteTaskFromFirestore(String taskId, String userId) async {
     CollectionReference<TaskModel> taskCollection = getTaskCollection(userId);
     return taskCollection.doc(taskId).delete();
+  }
+
+  static Future<void> editisDone(TaskModel task, String userId)async{
+    CollectionReference<TaskModel> taskCollection = getTaskCollection(userId);
+    return getTaskCollection(userId).doc(task.id).update({"isDone": !task.isDone});
   }
 
   static Future<UserModel> register({
