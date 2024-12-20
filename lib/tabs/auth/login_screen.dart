@@ -9,24 +9,23 @@ import 'package:todo/home_screen.dart';
 import 'package:todo/tabs/auth/register_screen.dart';
 import 'package:todo/tabs/auth/user_provider.dart';
 
-class LoginScreen extends StatefulWidget{
+class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';
 
   const LoginScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() => _LoginScreen();
-
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreen extends State<LoginScreen>{
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  var formKey = GlobalKey<FormState>();
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold( 
+    return Scaffold(
       appBar: AppBar(
         title: const Text('Log In'),
       ),
@@ -40,67 +39,66 @@ class _LoginScreen extends State<LoginScreen>{
               DefaultTextFormField(
                 controller: emailController,
                 hintText: 'Email',
-                validator: (value){
-                  if(value == null || value.trim().length<5){
-                    return'Email must be more than 5 characters';
+                validator: (value) {
+                  if (value == null || value.trim().length < 5) {
+                    return 'Email must be more than 5 characters';
                   }
-                  else{
-                    return null;
-                  }
+                  return null;
                 },
               ),
               const SizedBox(height: 16),
               DefaultTextFormField(
                 controller: passwordController,
                 hintText: 'Password',
-                validator: (value){
-                  if(value == null || value.trim().length<8){
-                    return"Password can't be less than 8 characters";
+                validator: (value) {
+                  if (value == null || value.trim().length < 8) {
+                    return "Password can't be less than 8 characters";
                   }
-                  else{
-                    return null;
-                  }
+                  return null;
                 },
-                isPassword: true,
+                isPassword: true, // Ensures the field starts as obscured
               ),
               const SizedBox(height: 32),
               DefaultElevatedButton(
-                  label: 'Login',
-                  onPressed: login,
+                label: 'Login',
+                onPressed: login,
               ),
               const SizedBox(height: 8),
-              TextButton(onPressed: () => Navigator.of(context)
-                  .pushReplacementNamed(RegisterScreen.routeName),
-                  child: const Text("Don't have an account"))
+              TextButton(
+                onPressed: () => Navigator.of(context)
+                    .pushReplacementNamed(RegisterScreen.routeName),
+                child: const Text("Don't have an account? Register"),
+              ),
             ],
           ),
         ),
       ),
     );
   }
-  void login(){
-    if(formKey.currentState!.validate()){
+
+  void login() {
+    if (formKey.currentState!.validate()) {
       FirebaseFunctions.login(
-          email: emailController.text,
-          password: passwordController.text
+        email: emailController.text,
+        password: passwordController.text,
       ).then(
-          (user) {
-            Provider.of<UserProvider>(context, listen: false).updateUser(user);
-            Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
-          },
+            (user) {
+          Provider.of<UserProvider>(context, listen: false).updateUser(user);
+          Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+        },
       ).catchError(
-          (error) {
-            String? message;
-            if(error is FirebaseAuthException){
-              message = error.message;
-            }
-            Fluttertoast.showToast(
-              msg: message ?? 'Something went wrong',
-              toastLength: Toast.LENGTH_LONG,
-              timeInSecForIosWeb: 5,
-              backgroundColor: Colors.red,
-            );
-          },
+            (error) {
+          String? message;
+          if (error is FirebaseAuthException) {
+            message = error.message;
+          }
+          Fluttertoast.showToast(
+            msg: message ?? 'Something went wrong',
+            toastLength: Toast.LENGTH_LONG,
+            timeInSecForIosWeb: 5,
+            backgroundColor: Colors.red,
+          );
+        },
       );
     }
   }

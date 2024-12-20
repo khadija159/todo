@@ -1,3 +1,9 @@
 {
-  "todoList": "ToDo List"
+  "todoList": "ToDo List",
+  "settings": "Settings",
+  "themedark": "Dark Theme",
+  "langs": "Language",
+  "tasknav": "Tasks",
+  "set": "Settings",
+  "exit": "Logout"
 }

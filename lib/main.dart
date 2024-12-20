@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:todo/tabs/auth/login_screen.dart';
 import 'package:todo/tabs/auth/register_screen.dart';
 import 'package:todo/tabs/auth/user_provider.dart';
+import 'package:todo/tabs/settings/settings_provider.dart';
 import 'package:todo/tabs/tasks/tasks_provider.dart';
 import 'package:todo/tabs/tasks/update_task.dart';
 import 'home_screen.dart';
@@ -21,6 +22,9 @@ Future<void> main() async {
       ChangeNotifierProvider(
         create: (_) => UserProvider(),
       ),
+      ChangeNotifierProvider(
+        create: (_) => SettingsProvider(),
+      ),
     ],
       child: const TodoApp()
     ),
@@ -32,6 +36,7 @@ class TodoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SettingsProvider settingsProvider = Provider.of<SettingsProvider>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
@@ -43,10 +48,10 @@ class TodoApp extends StatelessWidget {
       initialRoute: LoginScreen.routeName,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.light,
+      themeMode: SettingsProvider.themeMode,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      locale: const Locale('en'),
+      locale: Locale(SettingsProvider.languageCode),
     );
   }
 }

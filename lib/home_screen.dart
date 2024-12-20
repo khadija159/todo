@@ -3,6 +3,8 @@ import 'package:todo/tabs/tasks/add_task_bottom_sheet.dart';
 import 'app_theme.dart';
 import 'tabs/tasks/tasks_tab.dart';
 import 'tabs/settings/settings_tab.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class HomeScreen extends StatefulWidget{
   static const String routeName = '/home';
@@ -23,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundLight,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: tabs[currentTabIndex],
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
@@ -35,15 +37,15 @@ class _HomeScreenState extends State<HomeScreen>{
             currentIndex: currentTabIndex,
             onTap: (index) => setState(() => currentTabIndex = index),
             elevation: 0,
-            items: const [
+            items: [
               BottomNavigationBarItem(
-                  label: 'Tasks',
-                  icon: Icon(
+                  label: AppLocalizations.of(context)!.tasknav,
+                  icon: const Icon(
                     Icons.list,
                     size: 32,)
               ),
-              BottomNavigationBarItem(
-                  label: 'Settings',
+               BottomNavigationBarItem(
+                  label: AppLocalizations.of(context)!.set,
                   icon: Icon(
                     Icons.settings,
                     size: 32,)
